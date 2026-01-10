@@ -170,6 +170,14 @@ def make_test_sql_client(url: str, password: str, schema: str) -> SqlClientWithD
         __configure_databricks_env_from_url(url, password=password, schema=schema)
         __initialize_dbt()
         return AdapterBackedDDLSqlClient(adapter=get_adapter_by_type("databricks"))
+    elif dialect is SqlDialect.STARROCKS:
+        __configure_test_env_from_url(url, password=password, schema=schema)
+        __initialize_dbt()
+        return AdapterBackedDDLSqlClient(adapter=get_adapter_by_type("starrocks"))
+    elif dialect is SqlDialect.KYLIN:
+        __configure_test_env_from_url(url, password=password, schema=schema)
+        __initialize_dbt()
+        return AdapterBackedDDLSqlClient(adapter=get_adapter_by_type("kylin"))
     elif dialect is SqlDialect.TRINO:
         __configure_test_env_from_url(url, password=password, schema=schema)
         __initialize_dbt()

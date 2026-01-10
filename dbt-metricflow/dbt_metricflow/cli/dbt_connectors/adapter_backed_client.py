@@ -17,10 +17,12 @@ from metricflow.protocols.sql_client import SqlEngine
 from metricflow.sql.render.big_query import BigQuerySqlPlanRenderer
 from metricflow.sql.render.databricks import DatabricksSqlPlanRenderer
 from metricflow.sql.render.duckdb_renderer import DuckDbSqlPlanRenderer
+from metricflow.sql.render.kylin import KylinSqlPlanRenderer
 from metricflow.sql.render.postgres import PostgresSQLSqlPlanRenderer
 from metricflow.sql.render.redshift import RedshiftSqlPlanRenderer
 from metricflow.sql.render.snowflake import SnowflakeSqlPlanRenderer
 from metricflow.sql.render.sql_plan_renderer import SqlPlanRenderer
+from metricflow.sql.render.starrocks import StarRocksSqlPlanRenderer
 from metricflow.sql.render.trino import TrinoSqlPlanRenderer
 from metricflow.sql_request.sql_request_attributes import SqlRequestId
 
@@ -41,6 +43,8 @@ class SupportedAdapterTypes(enum.Enum):
     REDSHIFT = "redshift"
     BIGQUERY = "bigquery"
     DUCKDB = "duckdb"
+    KYLIN = "kylin"
+    STARROCKS = "starrocks"
     TRINO = "trino"
 
     @property
@@ -58,6 +62,10 @@ class SupportedAdapterTypes(enum.Enum):
             return SqlEngine.SNOWFLAKE
         elif self is SupportedAdapterTypes.DUCKDB:
             return SqlEngine.DUCKDB
+        elif self is SupportedAdapterTypes.KYLIN:
+            return SqlEngine.KYLIN
+        elif self is SupportedAdapterTypes.STARROCKS:
+            return SqlEngine.STARROCKS
         elif self is SupportedAdapterTypes.TRINO:
             return SqlEngine.TRINO
         else:
@@ -78,6 +86,10 @@ class SupportedAdapterTypes(enum.Enum):
             return SnowflakeSqlPlanRenderer()
         elif self is SupportedAdapterTypes.DUCKDB:
             return DuckDbSqlPlanRenderer()
+        elif self is SupportedAdapterTypes.KYLIN:
+            return KylinSqlPlanRenderer()
+        elif self is SupportedAdapterTypes.STARROCKS:
+            return StarRocksSqlPlanRenderer()
         elif self is SupportedAdapterTypes.TRINO:
             return TrinoSqlPlanRenderer()
         else:

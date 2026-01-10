@@ -2,7 +2,7 @@
 
 Credentials are stored as a JSON string in an environment variable set via a shell command like:
 
-export MF_TEST_ENGINE_CREDENTIALS=$(cat <<EOF
+export MF_TEST_ENGINE_CREDENTIAL_SETS=$(cat <<EOF
 {
     "duck_db": {
         "engine_url": null,
@@ -26,6 +26,14 @@ export MF_TEST_ENGINE_CREDENTIALS=$(cat <<EOF
     },
     "postgres": {
         "engine_url": postgres://...",
+        "engine_password": "..."
+    },
+    "kylin": {
+        "engine_url": "kylin://...",
+        "engine_password": "..."
+    },
+    "starrocks": {
+        "engine_url": "starrocks://...",
         "engine_password": "..."
     },
     "trino": {
@@ -76,6 +84,8 @@ class MetricFlowTestCredentialSetForAllEngines(FrozenBaseModel):  # noqa: D101
     big_query: MetricFlowTestCredentialSet
     databricks: MetricFlowTestCredentialSet
     postgres: MetricFlowTestCredentialSet
+    kylin: MetricFlowTestCredentialSet
+    starrocks: MetricFlowTestCredentialSet
     trino: MetricFlowTestCredentialSet
 
     @property
@@ -104,6 +114,14 @@ class MetricFlowTestCredentialSetForAllEngines(FrozenBaseModel):  # noqa: D101
             MetricFlowEngineConfiguration(
                 engine=SqlEngine.POSTGRES,
                 credential_set=self.postgres,
+            ),
+            MetricFlowEngineConfiguration(
+                engine=SqlEngine.KYLIN,
+                credential_set=self.kylin,
+            ),
+            MetricFlowEngineConfiguration(
+                engine=SqlEngine.STARROCKS,
+                credential_set=self.starrocks,
             ),
             MetricFlowEngineConfiguration(
                 engine=SqlEngine.TRINO,
@@ -153,6 +171,8 @@ def run_tests(test_configuration: MetricFlowEngineConfiguration) -> None:  # noq
         or test_configuration.engine is SqlEngine.BIGQUERY
         or test_configuration.engine is SqlEngine.DATABRICKS
         or test_configuration.engine is SqlEngine.POSTGRES
+        or test_configuration.engine is SqlEngine.KYLIN
+        or test_configuration.engine is SqlEngine.STARROCKS
         or test_configuration.engine is SqlEngine.TRINO
     ):
         engine_name = test_configuration.engine.value.lower()

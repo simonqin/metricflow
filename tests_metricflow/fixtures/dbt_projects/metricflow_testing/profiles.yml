@@ -27,6 +27,17 @@ databricks:
       token: "{{ env_var('DBT_ENV_SECRET_PASSWORD') }}"
       http_path: "{{ env_var('DBT_ENV_SECRET_HTTP_PATH') }}"
       schema: "{{ env_var('DBT_ENV_SECRET_SCHEMA') }}"
+kylin:
+  target: dev
+  outputs:
+    dev:
+      type: kylin
+      host: "{{ env_var('DBT_ENV_SECRET_HOST') }}"
+      port: "{{ env_var('DBT_PROFILE_PORT') | int }}"
+      user: "{{ env_var('DBT_ENV_SECRET_USER') }}"
+      password: "{{ env_var('DBT_ENV_SECRET_PASSWORD') }}"
+      database: "{{ env_var('DBT_ENV_SECRET_DATABASE') }}"
+      schema: "{{ env_var('DBT_ENV_SECRET_SCHEMA') }}"
 postgres:
   target: dev
   outputs:
@@ -48,6 +59,17 @@ redshift:
       user: "{{ env_var('DBT_ENV_SECRET_USER') }}"
       password: "{{ env_var('DBT_ENV_SECRET_PASSWORD') }}"
       dbname: "{{ env_var('DBT_ENV_SECRET_DATABASE') }}"
+      schema: "{{ env_var('DBT_ENV_SECRET_SCHEMA') }}"
+starrocks:
+  target: dev
+  outputs:
+    dev:
+      type: starrocks
+      host: "{{ env_var('DBT_ENV_SECRET_HOST') }}"
+      port: "{{ env_var('DBT_PROFILE_PORT') | int }}"
+      user: "{{ env_var('DBT_ENV_SECRET_USER') }}"
+      password: "{{ env_var('DBT_ENV_SECRET_PASSWORD') }}"
+      database: "{{ env_var('DBT_ENV_SECRET_DATABASE') }}"
       schema: "{{ env_var('DBT_ENV_SECRET_SCHEMA') }}"
 snowflake:
   target: dev

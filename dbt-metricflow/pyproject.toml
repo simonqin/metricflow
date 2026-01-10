@@ -54,6 +54,9 @@ dbt-databricks = [
 dbt-duckdb = [
   "requirements-files/requirements-dbt-duckdb.txt"
 ]
+dbt-kylin = [
+  "requirements-files/requirements-dbt-kylin.txt"
+]
 dbt-postgres = [
   "requirements-files/requirements-dbt-postgres.txt"
 ]
@@ -62,6 +65,9 @@ dbt-redshift = [
 ]
 dbt-snowflake = [
   "requirements-files/requirements-dbt-snowflake.txt"
+]
+dbt-starrocks = [
+  "requirements-files/requirements-dbt-starrocks.txt"
 ]
 dbt-trino = [
   "requirements-files/requirements-dbt-trino.txt"

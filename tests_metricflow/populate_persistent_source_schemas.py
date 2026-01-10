@@ -29,6 +29,8 @@ def populate_schemas(test_configuration: MetricFlowEngineConfiguration) -> None:
         or test_configuration.engine is SqlEngine.BIGQUERY
         or test_configuration.engine is SqlEngine.DATABRICKS
         or test_configuration.engine is SqlEngine.REDSHIFT
+        or test_configuration.engine is SqlEngine.KYLIN
+        or test_configuration.engine is SqlEngine.STARROCKS
         or test_configuration.engine is SqlEngine.TRINO
     ):
         engine_name = test_configuration.engine.value.lower()

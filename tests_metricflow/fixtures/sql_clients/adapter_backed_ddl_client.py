@@ -102,9 +102,13 @@ class AdapterBackedDDLSqlClient(AdapterBackedSqlClient):
         # TODO: add type handling for string/bool/bigint types for all engines
         column_type = column_description.column_type
         if column_type is str:
-            if self.sql_engine_type is SqlEngine.DATABRICKS or self.sql_engine_type is SqlEngine.BIGQUERY:
+            if (
+                self.sql_engine_type is SqlEngine.DATABRICKS
+                or self.sql_engine_type is SqlEngine.BIGQUERY
+                or self.sql_engine_type is SqlEngine.KYLIN
+            ):
                 return "string"
-            if self.sql_engine_type is SqlEngine.TRINO:
+            if self.sql_engine_type is SqlEngine.TRINO or self.sql_engine_type is SqlEngine.STARROCKS:
                 return "varchar"
             return "text"
         elif column_type is bool:
