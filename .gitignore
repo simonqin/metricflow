@@ -135,6 +135,9 @@ dmypy.json
 .idea/
 .vscode/
 
+# Git worktrees
+.worktrees/
+
 # Performance reports
 performance-report.json
 performance-comparison.md
