@@ -10,6 +10,7 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 from dbt.adapters.factory import get_adapter_by_type
 from dbt.cli.main import dbtRunner
+from dbt_metricflow.cli.dbt_connectors.adapter_backed_client import SupportedAdapterTypes
 from metricflow_semantics.test_helpers.config_helpers import MetricFlowTestConfiguration
 from metricflow_semantics.toolkit.mf_logging.lazy_formattable import LazyFormat
 
@@ -19,6 +20,7 @@ from tests_metricflow.fixtures.setup_fixtures import dbt_project_dir
 from tests_metricflow.fixtures.sql_clients.adapter_backed_ddl_client import AdapterBackedDDLSqlClient
 from tests_metricflow.fixtures.sql_clients.common_client import SqlDialect
 from tests_metricflow.fixtures.sql_clients.ddl_sql_client import SqlClientWithDDLMethods
+from tests_metricflow.fixtures.sql_clients.render_only_sql_client import RenderOnlySqlClient
 
 logger = logging.getLogger(__name__)
 
@@ -136,8 +138,26 @@ def __initialize_dbt() -> None:
     dbtRunner().invoke(["debug"], project_dir=dbt_project_dir(), PROFILES_DIR=dbt_project_dir())
 
 
+def _render_only_sql_client() -> RenderOnlySqlClient:
+    adapter_type_value = os.environ.get("MF_TEST_ADAPTER_TYPE")
+    if not adapter_type_value:
+        raise ValueError("MF_TEST_ADAPTER_TYPE must be set when MF_TEST_RENDER_ONLY=1")
+    try:
+        adapter_type = SupportedAdapterTypes(adapter_type_value)
+    except ValueError as error:
+        raise ValueError(f"Unsupported adapter type '{adapter_type_value}' for render-only mode") from error
+
+    return RenderOnlySqlClient(
+        sql_engine_type=adapter_type.sql_engine_type,
+        sql_plan_renderer=adapter_type.sql_plan_renderer,
+    )
+
+
 def make_test_sql_client(url: str, password: str, schema: str) -> SqlClientWithDDLMethods:
     """Build SQL client based on env configs."""
+    if os.environ.get("MF_TEST_RENDER_ONLY") == "1":
+        return _render_only_sql_client()
+
     # TODO: Switch on an enum of adapter type when all engines are cut over
     dialect = SqlDialect(SqlEngineConnectionParameterSet.create_from_url(url).dialect)
 
