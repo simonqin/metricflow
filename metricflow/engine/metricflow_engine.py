@@ -933,8 +933,24 @@ class MetricFlowEngine(AbstractMetricFlowEngine):
                 group_by_item_set=group_by_item_set
             ) + self._filter_simple_linkable_dimensions(group_by_item_set=group_by_item_set)
         else:
-            # TODO: better support for querying entities without metrics; include entities here at that time
-            group_bys = self.list_dimensions()
+            semantic_model_lookup = self._semantic_manifest_lookup.semantic_model_lookup
+            entities: list[Entity] = []
+            for entity_reference in semantic_model_lookup.get_entity_references():
+                for semantic_model in semantic_model_lookup.get_semantic_models_for_entity(entity_reference):
+                    pydantic_entity = semantic_model_lookup.get_entity_in_semantic_model(
+                        SemanticModelElementReference(
+                            semantic_model_name=semantic_model.reference.semantic_model_name,
+                            element_name=entity_reference.element_name,
+                        )
+                    )
+                    if pydantic_entity:
+                        entities.append(
+                            Entity.from_pydantic(
+                                pydantic_entity=pydantic_entity,
+                                semantic_model_reference=semantic_model.reference,
+                            )
+                        )
+            group_bys = self.list_dimensions() + entities
 
         def sort_group_bys(group_by: Entity | Dimension) -> Tuple[str, ...]:
             name_attr = group_by.dunder_name if isinstance(group_by, Dimension) else group_by.name
